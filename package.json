@@ -1,10 +1,26 @@
 {
   "name": "nestjs-google-drive",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "description": "Upload images to google drive for nestjs applications",
+  "author": "dan73",
+  "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngimdock/nestjs-google-drive.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ngimdock/nestjs-google-drive/issues"
+  },
+  "homepage": "https://github.com/ngimdock/nestjs-google-drive#readme",
+  "keywords": [
+    "nestjs",
+    "google",
+    "drive",
+    "upload",
+    "files"
+  ],
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",

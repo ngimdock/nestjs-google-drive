@@ -15,7 +15,7 @@ export class GoogleDriveService {
    * @param folder folder name
    * @returns
    */
-  async uploadFile(file: any, folderId: string) {
+  async uploadFile(file: Express.Multer.File, folderId: string) {
     try {
       const fileMetadata = {
         name: file.filename,
@@ -23,7 +23,7 @@ export class GoogleDriveService {
       };
 
       const media = {
-        mimeType: file.mimeType,
+        mimeType: file.mimetype,
         body: this.bufferToStream(file),
       };
 
@@ -43,6 +43,10 @@ export class GoogleDriveService {
     }
   }
 
+  /**
+   * Delete file on google drive
+   * @param fileId file id to delete
+   */
   async deleteFile(fileId: string) {
     try {
       const drive = this.getDriveService();
