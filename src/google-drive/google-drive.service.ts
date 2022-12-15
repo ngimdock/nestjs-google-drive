@@ -9,15 +9,7 @@ export class GoogleDriveService {
   constructor(
     @Inject(GOOGLE_DRIVE_CONFIG)
     private readonly googleDriveConfig: GoogleDriveConfigType,
-  ) {
-    const auth = this.getAuth();
-
-    const refreshToken = googleDriveConfig.refreshToken;
-
-    auth.setCredentials({
-      refresh_token: refreshToken,
-    });
-  }
+  ) {}
 
   /**
    * Upload file to Google Drive
@@ -25,7 +17,7 @@ export class GoogleDriveService {
    * @param folder folder name
    * @returns
    */
-  async uploadFile(file: Express.Multer.File, folderId: string) {
+  async uploadFile(file: Express.Multer.File, folderId?: string) {
     try {
       const fileMetadata = {
         name: file.filename,
@@ -101,9 +93,14 @@ export class GoogleDriveService {
    */
   private getAuth() {
     try {
-      const { clientId, clientSecret, redirectUrl } = this.googleDriveConfig;
+      const { clientId, clientSecret, redirectUrl, refreshToken } =
+        this.googleDriveConfig;
 
-      return new google.auth.OAuth2(clientId, clientSecret, redirectUrl);
+      const auth = new google.auth.OAuth2(clientId, clientSecret, redirectUrl);
+
+      auth.setCredentials({ refresh_token: refreshToken });
+
+      return auth;
     } catch (err) {
       throw err;
     }

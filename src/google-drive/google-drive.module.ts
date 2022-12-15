@@ -8,6 +8,7 @@ export class GoogleDriveModule {
   static register(googleDriveConfig: GoogleDriveConfigType): DynamicModule {
     return {
       module: GoogleDriveModule,
+      global: true,
       providers: [
         {
           provide: GOOGLE_DRIVE_CONFIG,
@@ -15,7 +16,12 @@ export class GoogleDriveModule {
         },
         GoogleDriveService,
       ],
-      exports: [GoogleDriveService],
+      exports: [
+        GoogleDriveService, 
+        {
+          provide: GOOGLE_DRIVE_CONFIG,
+          useValue: googleDriveConfig,
+        }],
     };
   }
 }
