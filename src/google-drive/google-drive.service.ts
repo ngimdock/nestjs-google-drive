@@ -1,13 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { google } from 'googleapis';
+import { GOOGLE_DRIVE_CONFIG } from './google-drive.constant';
+import { GoogleDriveConfigType } from './types';
 
 @Injectable()
 export class GoogleDriveService {
-  private static GOODRIVE_KEYFILE =
-    'src/google-drive/utils/service-account.json';
+  constructor(
+    @Inject(GOOGLE_DRIVE_CONFIG)
+    private readonly googleDriveConfig: GoogleDriveConfigType,
+  ) {
+    const auth = this.getAuth();
 
-  private static SCOPES = 'https://www.googleapis.com/auth/drive';
+    const refreshToken = googleDriveConfig.refreshToken;
+
+    auth.setCredentials({
+      refresh_token: refreshToken,
+    });
+  }
 
   /**
    * Upload file to Google Drive
@@ -64,7 +74,7 @@ export class GoogleDriveService {
    * @param fileId file id
    * @returns
    */
-  private async getFileURL(fileId: string) {
+  async getFileURL(fileId: string) {
     const drive = this.getDriveService();
 
     await drive.permissions.create({
@@ -91,10 +101,9 @@ export class GoogleDriveService {
    */
   private getAuth() {
     try {
-      return new google.auth.GoogleAuth({
-        keyFile: GoogleDriveService.GOODRIVE_KEYFILE,
-        scopes: GoogleDriveService.SCOPES,
-      });
+      const { clientId, clientSecret, redirectUrl } = this.googleDriveConfig;
+
+      return new google.auth.OAuth2(clientId, clientSecret, redirectUrl);
     } catch (err) {
       throw err;
     }
